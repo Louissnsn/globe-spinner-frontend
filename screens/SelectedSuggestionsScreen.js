@@ -186,7 +186,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
             style={{
               width: "50%",
               borderRightWidth: 1,
-              borderStyle: "dashed",
+              // borderStyle: "dashed", Ne fonctionne pas sur iOS
               alignItems: "center",
             }}
           >

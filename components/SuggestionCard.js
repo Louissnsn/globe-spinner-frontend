@@ -32,13 +32,18 @@ export default function SuggestionCard({
       onPress={() => selectTrip(tripIndex)}
     >
       <View style={styles.cityImgContainer}>
-        <FontAwesome
+        <TouchableOpacity
           style={styles.bookmark}
-          name="bookmark"
-          size={30}
-          color={isBookmarked ? "#BA99FE" : "white"}
           onPress={() => bookmarkTrip(tripIndex)}
-        />
+        >
+          <FontAwesome
+            name="bookmark"
+            size={30}
+            color={isBookmarked ? "#BA99FE" : "white"}
+            onPress={() => bookmarkTrip(tripIndex)}
+          />
+        </TouchableOpacity>
+
         <CustomText
           style={{
             ...styles.cityTitle,
@@ -117,8 +122,9 @@ const styles = StyleSheet.create({
   bookmark: {
     position: "absolute",
     zIndex: 2,
-    right: 20,
-    top: 10,
+    right: -3,
+    top: 4,
+    padding: 10,
   },
   cityImg: {
     width: "100%",

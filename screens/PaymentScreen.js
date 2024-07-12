@@ -56,7 +56,9 @@ const PaymentScreen = () => {
         </View>
         <TextInput
           style={[styles.input, { fontFamily: "NunitoSans_400Regular" }]}
-          placeholder="Enter card number" maxLength={16}  keyboardType="numeric"
+          placeholder="Enter card number"
+          maxLength={16}
+          keyboardType="numeric"
         />
 
         <View style={styles.subtitleContainer}>
@@ -98,7 +100,7 @@ const PaymentScreen = () => {
         <Text
           style={[styles.amountText, { fontFamily: "KronaOne_400Regular" }]}
         >
-          Amount: 1400€
+          Amount:
         </Text>
 
         <TouchableOpacity style={styles.payButton} onPress={handlePayPress}>
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 16,
-   marginHorizontal : 30,
+    marginHorizontal: 30,
     flex: 1,
   },
   subtitleIcon: {
