@@ -14,62 +14,54 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-// import DatePickerAndroid from "../components/android/DatePickerAndroid";
 import CustomCheckbox from "../components/CustomCheckbox";
 import { CustomText } from "../components/CustomText";
 import { useDispatch, useSelector } from "react-redux";
 import { addFiltersToStore } from "../reducers/filters";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import moment from "moment";
-
 import DatePickerIOS from "../components/ios/DatePickerIOS";
-
 import GradientFontColor from "../components/GradientFontColor";
 
+// List of available transportation modes
 const transportationMode = ["Train", "Airplane", "Coach"];
 
+// FiltersScreen component to set travel filters
 export default function FiltersScreen({ navigation }) {
   const dispatch = useDispatch();
-  const { height, width } = useWindowDimensions();
-  const [departureDate, setDepartureDate] = useState(new Date());
+  const { height, width } = useWindowDimensions(); // Get device dimensions for responsive design
+  const [departureDate, setDepartureDate] = useState(new Date()); // State for departure date
   const [returnDate, setReturnDate] = useState(
     moment().add(4, "days").toDate()
-  );
-  const [budget, setBudget] = useState("");
-  const [nbrOfTravelers, setNbrOfTravelers] = useState(1);
+  ); // State for return date
+  const [budget, setBudget] = useState(""); // State for budget
+  const [nbrOfTravelers, setNbrOfTravelers] = useState(1); // State for number of travelers
   const [transportType, setTransportType] = useState([
     "Train",
     "Airplane",
     "Coach",
-  ]);
-  const [dataSet, setDataSet] = useState([]);
-  const [selectedCity, setSelectedCity] = useState({});
+  ]); // State for selected transportation modes
+  const [dataSet, setDataSet] = useState([]); // State for city suggestions
+  const [selectedCity, setSelectedCity] = useState({}); // State for selected city
 
+  // Search for city suggestions based on query
   const searchCity = (query) => {
-    // Prevent search with an empty query
     if (query === "" || query.length < 3) {
       return;
     }
-    // console.log("query", query);
-
     fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}`)
       .then((response) => response.json())
       .then(({ features }) => {
-        // console.log(features)
-        const suggestions = features.map((data, i) => {
-          return {
-            id: i + 1,
-            title: data.properties.label,
-            coordinates: data.geometry.coordinates,
-          };
-        });
-        // console.log("suggestions", suggestions);
+        const suggestions = features.map((data, i) => ({
+          id: i + 1,
+          title: data.properties.label,
+          coordinates: data.geometry.coordinates,
+        }));
         setDataSet(suggestions);
       });
   };
 
-  // console.log("city", selectedCity);
-
+  // Select or deselect a transportation mode
   const selectTransportationMode = (type) => {
     if (!transportType.includes(type)) {
       setTransportType((prevTypes) => [...prevTypes, type]);
@@ -77,6 +69,8 @@ export default function FiltersScreen({ navigation }) {
       setTransportType((prevTypes) => prevTypes.filter((e) => e !== type));
     }
   };
+
+  // Generate checkboxes for transportation modes
   const checkboxes = transportationMode.map((e, i) => (
     <CustomCheckbox
       key={i}
@@ -85,6 +79,7 @@ export default function FiltersScreen({ navigation }) {
     />
   ));
 
+  // Dispatch filters to the store and navigate to suggestions screen
   const handleSubmit = () => {
     const filters = {
       departureLocation: selectedCity.coordinates,
@@ -96,19 +91,15 @@ export default function FiltersScreen({ navigation }) {
     };
 
     dispatch(addFiltersToStore({ filters }));
-    // console.log(
-    //   "************************************************************",
-    //   { filters },
-    //   "************************************************************"
-    // );
     navigation.navigate("SuggestionsHomeStack");
   };
 
+  // Check if any required fields are empty
   const checkHasEmptyField = (fields) =>
     fields.some((field) => !field || field === "" || field.length === 0);
 
+  // Validate input fields and handle form submission
   const handlePressSubmit = () => {
-    // return true; // comment this line if you don't want to bypass the filters
     const requiredFields = [
       selectedCity.coordinates,
       budget,
@@ -118,25 +109,17 @@ export default function FiltersScreen({ navigation }) {
       returnDate,
     ];
     if (checkHasEmptyField(requiredFields)) {
-      // console.log({
-      //   selectedCity,
-      //   budget,
-      //   nbrOfTravelers,
-      //   transportType,
-      //   departureDate,
-      //   returnDate,
-      // });
       return Alert.alert("Some fields are missing!");
     }
     return true;
   };
 
+  // Call validation and submission functions
   const callHandleAndHandlePress = () => {
     const result = handlePressSubmit();
     if (result) {
       handleSubmit();
     }
-    // console.log("handlePressSubmit", handlePressSubmit());
   };
 
   return (
@@ -217,8 +200,6 @@ export default function FiltersScreen({ navigation }) {
               <CustomText>How many people:</CustomText>
               <TextInput
                 style={styles.input}
-                // onChangeText={handleTextChange}
-                // value={"test"}
                 keyboardType="numeric"
                 placeholder="E.g. 3"
                 onChangeText={(number) => setNbrOfTravelers(Number(number))}
@@ -229,8 +210,6 @@ export default function FiltersScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
-                // onChangeText={handleTextChange}
-                // value={"test"}
                 placeholder="E.g. 300€"
                 onChangeText={(number) => setBudget(number)}
               />
@@ -259,7 +238,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     backgroundColor: "white",
-    // paddingBottom: 130,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -279,7 +257,6 @@ const styles = StyleSheet.create({
     marginTop: 25,
     alignItems: "center",
   },
-
   sectionTextTitle: {
     backgroundColor: "white",
     fontSize: 20,
@@ -293,20 +270,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     zIndex: 99,
   },
-
   inputContainerRow: {
     width: "100%",
     marginVertical: 20,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItemps: "baseline",
     flexWrap: "wrap",
   },
   inputContainer: {
     width: "43%",
-  },
-  departureInput: {
-    flexDirection: "row",
   },
   input: {
     fontSize: 16,
@@ -325,12 +297,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     marginBottom: 15,
-  },
-  fieldsError: {
-    fontSize: 20,
-    marginBottom: 20,
-    color: "red",
-    fontWeight: "bold",
   },
   button: {
     marginTop: 10,
