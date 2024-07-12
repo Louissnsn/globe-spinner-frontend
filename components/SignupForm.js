@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
@@ -13,34 +12,28 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import GradientFontColor from "./GradientFontColor";
 import { CustomText } from "./CustomText";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Header } from "@react-navigation/elements";
-
 export default function SignupForm({ submit, closeModal }) {
-  const { width } = useWindowDimensions();
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { width } = useWindowDimensions(); // Get device width for responsive design
+  const [firstname, setFirstname] = useState(""); // State for first name input
+  const [lastname, setLastname] = useState(""); // State for last name input
+  const [email, setEmail] = useState(""); // State for email input
+  const [password, setPassword] = useState(""); // State for password input
+  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password input
+  const [errorMsg, setErrorMsg] = useState(""); // State for error message
 
-  // const [showFieldsError, setShowFieldsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const EMAIL_REGEX =
+  const EMAIL_REGEX = // Regular expression for email validation
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+  // Function to check if any fields are empty
   const checkHasEmptyField = (fields) => {
-    for (let field of fields) {
-      if (!field || field === " ") return true;
-    }
-    return false;
+    return fields.some((field) => !field || field.trim() === "");
   };
 
+  // Handle form submission
   const handlePressSubmit = async () => {
     if (
       checkHasEmptyField([
@@ -54,18 +47,17 @@ export default function SignupForm({ submit, closeModal }) {
       return Alert.alert("Some fields are missing!");
     }
     if (!EMAIL_REGEX.test(email)) {
-      return Alert.alert("Wrong email adress or");
+      return Alert.alert("Invalid email address!");
     }
     if (password !== confirmPassword) {
-      return Alert.alert("Password doesn't match!");
+      return Alert.alert("Passwords don't match!");
     }
     if (password.length < 5) {
-      return Alert.alert("Some fields are missing!");
+      return Alert.alert("Password must be at least 5 characters long!");
     }
     const response = await submit(firstname, lastname, email, password);
-    //console.log(response);
     if (!response.result) {
-      return Alert.alert("Some fields are missing!");
+      return Alert.alert("An error occurred during signup!");
     }
   };
 
@@ -73,87 +65,93 @@ export default function SignupForm({ submit, closeModal }) {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={[styles.scrollView, { width: width }]}>
         <StatusBar style="auto" />
+
+        {/* Close button */}
         <View>
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
             <FontAwesome name="close" size={30} color="black" />
           </TouchableOpacity>
         </View>
+
+        {/* Title */}
         <View style={styles.titleContainer}>
           <GradientFontColor style={styles.title}>Sign</GradientFontColor>
           <Text style={styles.titleUp}>up</Text>
         </View>
 
+        {/* Input fields */}
         <KeyboardAvoidingView
           enabled={true}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={[{ width: width }]}
+          style={{ width: width }}
         >
           <View style={styles.inputsContainerRow}>
             <View style={styles.textAndInput}>
               <CustomText style={{ fontSize: 20, color: "black" }}>
-                first name
+                First name
               </CustomText>
               <TextInput
-                placeholder="firstname"
+                placeholder="First name"
                 style={styles.textInput}
                 value={firstname}
-                onChangeText={(text) => setFirstname(text)}
+                onChangeText={setFirstname}
                 autoFocus={true}
-              ></TextInput>
+              />
             </View>
 
             <View style={styles.textAndInput}>
               <CustomText style={{ fontSize: 20, color: "black" }}>
-                last name
+                Last name
               </CustomText>
               <TextInput
-                placeholder="lastname"
+                placeholder="Last name"
                 style={styles.textInput}
                 value={lastname}
-                onChangeText={(text) => setLastname(text)}
-              ></TextInput>
+                onChangeText={setLastname}
+              />
             </View>
 
             <View style={styles.textAndInput}>
               <CustomText style={{ fontSize: 20, color: "black" }}>
-                e-mail
+                Email
               </CustomText>
               <TextInput
-                placeholder="e-mail"
+                placeholder="Email"
                 style={styles.textInput}
                 value={email}
-                onChangeText={(text) => setEmail(text)}
-              ></TextInput>
+                onChangeText={setEmail}
+              />
             </View>
 
             <View style={styles.textAndInput}>
               <CustomText style={{ fontSize: 20, color: "black" }}>
-                password
+                Password
               </CustomText>
               <TextInput
-                placeholder="password"
+                placeholder="Password"
                 secureTextEntry={true}
                 style={styles.textInput}
                 value={password}
-                onChangeText={(text) => setPassword(text)}
-              ></TextInput>
+                onChangeText={setPassword}
+              />
             </View>
 
             <View style={styles.textAndInput}>
               <CustomText style={{ fontSize: 20, color: "black" }}>
-                confirm password
+                Confirm password
               </CustomText>
               <TextInput
-                placeholder="confirm password"
+                placeholder="Confirm password"
                 secureTextEntry={true}
                 style={styles.textInput}
                 value={confirmPassword}
-                onChangeText={(text) => setConfirmPassword(text)}
-              ></TextInput>
+                onChangeText={setConfirmPassword}
+              />
             </View>
           </View>
         </KeyboardAvoidingView>
 
+        {/* Submit button */}
         <TouchableOpacity
           style={styles.submitButton}
           onPress={handlePressSubmit}
@@ -165,6 +163,7 @@ export default function SignupForm({ submit, closeModal }) {
   );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
@@ -175,13 +174,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
-
   titleContainer: {
     flexDirection: "row",
     marginBottom: 10,
     justifyContent: "center",
   },
-
   title: {
     marginVertical: 45,
     fontSize: 40,
@@ -194,7 +191,6 @@ const styles = StyleSheet.create({
     color: "#515151",
     marginLeft: 10,
   },
-
   inputsContainerRow: {
     width: "100%",
     marginVertical: 20,
