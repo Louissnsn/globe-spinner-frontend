@@ -1,7 +1,9 @@
+import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { Text } from "react-native";
 
+// GradientText component to display text with a gradient color
 const GradientText = (props) => {
   return (
     <MaskedView maskElement={<Text {...props} />}>
