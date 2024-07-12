@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useIsFocused } from "@react-navigation/native";
 
 const DEFAULT_OPTIONS = {
   method: "GET",
@@ -31,8 +30,7 @@ export default function useFetchSequence({
   const [isLoadingPlace2, setIsLoadingPlace2] = useState(false);
   const [errorPlace2, setErrorPlace2] = useState(null);
 
-  // const isScreenFocused = useIsFocused();
-
+  // Function to fetch generated trips and their images
   useEffect(() => {
     const fetchGenerate = async () => {
       let place1URL, place2URL;
@@ -40,6 +38,7 @@ export default function useFetchSequence({
 
       const requestController = new AbortController();
 
+      // Setup filters for generating trips
       const filters = {
         lat: generateFilters.departureLocation[1],
         lon: generateFilters.departureLocation[0],
@@ -57,13 +56,10 @@ export default function useFetchSequence({
         body: JSON.stringify(filters),
       };
 
-      //const abortController = new AbortController();
-
-      // if (!isScreenFocused) return;
-
       setGeneratedTrips(null);
       setIsLoadingGenerate(true);
 
+      // Fetch generated trips
       await fetch(generateRouteURL, {
         ...fetchGenerateRouteOptions,
         signal: requestController.signal,
@@ -77,7 +73,6 @@ export default function useFetchSequence({
           return response.json();
         })
         .then((data) => {
-          //console.log('[trips]', data);
           if (!data.result) {
             tripsValid = false;
             setErrorGenerate(data.error);
@@ -86,9 +81,7 @@ export default function useFetchSequence({
           setGeneratedTrips(data.trips);
           setIsLoadingGenerate(false);
           place1URL = `${imagesAPIprefix}${data.trips[0].destination.name}+aerial`;
-          //console.log('place1URL: ', place1URL);
           place2URL = `${imagesAPIprefix}${data.trips[1].destination.name}+aerial`;
-          //console.log('place2URL: ', place2URL);
         })
         .catch((error) => {
           setErrorGenerate(error);
@@ -97,6 +90,7 @@ export default function useFetchSequence({
 
       if (!tripsValid) return;
 
+      // Fetch images for the first place
       setPlace1(null);
       setIsLoadingPlace1(true);
 
@@ -112,7 +106,6 @@ export default function useFetchSequence({
           return response.json();
         })
         .then((data) => {
-          //console.log('[place1]', data);
           setPlace1(data);
           setIsLoadingPlace1(false);
         })
@@ -120,6 +113,7 @@ export default function useFetchSequence({
           setErrorPlace1(error);
         });
 
+      // Fetch images for the second place
       setPlace2(null);
       setIsLoadingPlace2(true);
 
@@ -135,7 +129,6 @@ export default function useFetchSequence({
           return response.json();
         })
         .then((data) => {
-          //console.log('[place2]', data);
           setPlace2(data);
           setIsLoadingPlace2(false);
         })
@@ -143,11 +136,11 @@ export default function useFetchSequence({
           setErrorPlace2(error);
         });
 
-      return () => abortController.abort();
+      return () => requestController.abort();
     };
 
     fetchGenerate();
-  }, [triggerFirstFetch /*isScreenFocused*/]);
+  }, [triggerFirstFetch]);
 
   return {
     generatedTrips,
