@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, StatusBar } from "react-native";
 
+// ParametersScreen page to display the parameters/settings screen
 export default function ParametersScreen({ navigation }) {
   return (
     <View style={styles.container}>
