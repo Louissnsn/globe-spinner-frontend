@@ -1,8 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
-  Text,
   Image,
   Pressable,
   useWindowDimensions,
@@ -11,28 +10,37 @@ import {
 } from "react-native";
 import { CustomText } from "../components/CustomText";
 
+// HomeScreen component to display the home screen
 export default function HomeScreen({ navigation }) {
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions(); // Get device height for responsive design
 
+  // Handle the press event to navigate to the FiltersHomeStack screen
   const handleSubmit = () => {
-navigation.navigate("FiltersHomeStack");
-
+    navigation.navigate("FiltersHomeStack");
   };
 
   return (
     <SafeAreaView style={[styles.container, { height }]}>
       <StatusBar style="auto" />
+
+      {/* Bottom Line Image */}
       <Image
         source={require("../assets/line-map.jpg")}
         style={styles.bottomLine}
       />
+
+      {/* Logo Image */}
       <Image
         source={require("../assets/globe_spinner.jpg")}
         style={styles.logoImage}
       />
+
+      {/* Travel Button */}
       <Pressable style={styles.travelButton} onPress={handleSubmit}>
         <CustomText style={styles.text}>TRAVEL</CustomText>
       </Pressable>
+
+      {/* Top Line Image */}
       <Image
         source={require("../assets/bendy-dotted-line_2.jpg")}
         style={styles.topLine}
