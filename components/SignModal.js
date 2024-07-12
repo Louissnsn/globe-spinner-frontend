@@ -1,37 +1,43 @@
 import React from "react";
-import { View, Modal, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 import { CustomText } from "./CustomText";
 import GradientFontColor from "./GradientFontColor";
-
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+// SignModal component to handle user sign-in and sign-up actions
 const SignModal = ({ onClose, onSignIn, onSignUp, closeSignModal }) => {
+  // Get user information from Redux store
   const userInfo = useSelector((state) => state.userInfo.value);
-  console.log(userInfo.isConnected);
-
-  //const dispatch = useDispatch();
+  //console.log(userInfo.isConnected); // Debugging log for user connection status
 
   return (
-    // plus de "Modal" car ça bug vraiment trop
     <View style={styles.container}>
-      <View>
-        <GradientFontColor style={styles.title}>Welcome !</GradientFontColor>
+      {/* Title with gradient color */}
+      <View style={styles.titleContainer}>
+        <GradientFontColor>
+          <Text style={styles.title}>Welcome!</Text>
+        </GradientFontColor>
       </View>
+
+      {/* Close button */}
       <TouchableOpacity style={styles.closeButton} onPress={closeSignModal}>
         <FontAwesome name="close" size={30} color="black" />
       </TouchableOpacity>
+
+      {/* Container for sign-in and sign-up buttons */}
       <View style={styles.buttonContainer}>
-        <CustomText style={{ fontSize: 18 }}>
-          Already have an account ?
-        </CustomText>
+        {/* Sign-in prompt */}
+        <CustomText style={styles.text}>Already have an account?</CustomText>
+        {/* Sign-in button */}
         <TouchableOpacity style={styles.button} onPress={onSignIn}>
           <CustomText style={styles.buttonText}>Sign In</CustomText>
         </TouchableOpacity>
-        <View style={{ alignItems: "center", marginTop: 50 }}>
-          <CustomText style={{ fontSize: 18 }}>
-            Don't have an account ?
-          </CustomText>
+
+        {/* Sign-up section */}
+        <View style={styles.signUpContainer}>
+          <CustomText style={styles.text}>Don't have an account?</CustomText>
+          {/* Sign-up button */}
           <TouchableOpacity style={styles.button} onPress={onSignUp}>
             <CustomText style={styles.buttonText}>Sign Up</CustomText>
           </TouchableOpacity>
@@ -47,24 +53,20 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
   titleContainer: {
-    flexDirection: "row",
     marginBottom: 30,
+    alignItems: "center",
   },
   title: {
     fontSize: 40,
-    justifyContent: "center",
-    alignItems: "center",
     fontFamily: "KronaOne_400Regular",
     marginTop: 50,
     marginBottom: 30,
   },
   buttonContainer: {
     flex: 1,
-    marginVertical: 20,
+    alignItems: "center",
   },
   button: {
     marginVertical: 10,
@@ -79,26 +81,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  cancelButton: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "#3972D9",
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
+  text: {
+    fontSize: 18,
   },
-  cancelButtonText: {
-    color: "#F5F5F5",
-    fontSize: 16,
-    fontWeight: "bold",
+  signUpContainer: {
+    alignItems: "center",
+    marginTop: 50,
   },
   closeButton: {
     width: 40,
     height: 40,
     right: 10,
     top: 15,
-    marginTop: -15,
-    marginRight: -10,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
