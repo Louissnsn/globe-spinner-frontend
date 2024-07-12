@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "./CustomText";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+// SuggestionCard component to display a trip suggestion
 export default function SuggestionCard({
   tripIndex,
   cityName,
@@ -25,13 +19,13 @@ export default function SuggestionCard({
   bookmarkTrip,
   isBookmarked,
 }) {
-  // console.log("hhh", isBookmarked);
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => selectTrip(tripIndex)}
     >
       <View style={styles.cityImgContainer}>
+        {/* Bookmark button */}
         <TouchableOpacity
           style={styles.bookmark}
           onPress={() => bookmarkTrip(tripIndex)}
@@ -40,10 +34,10 @@ export default function SuggestionCard({
             name="bookmark"
             size={30}
             color={isBookmarked ? "#BA99FE" : "white"}
-            onPress={() => bookmarkTrip(tripIndex)}
           />
         </TouchableOpacity>
 
+        {/* City name overlay */}
         <CustomText
           style={{
             ...styles.cityTitle,
@@ -54,28 +48,34 @@ export default function SuggestionCard({
         >
           {cityName}
         </CustomText>
+        {/* City image */}
         <Image source={img} style={styles.cityImg} />
+        {/* Overlay to darken the image */}
         <View style={styles.overlay} />
       </View>
+
+      {/* Information container */}
       <View style={styles.infosContainer}>
+        {/* List of activities */}
         <View style={styles.activitiesContainer}>
-          {activities.map((a, i) => (
-            <CustomText key={i} style={styles.text}>
-              -{a}
+          {activities.map((activity, index) => (
+            <CustomText key={index} style={styles.text}>
+              - {activity}
             </CustomText>
           ))}
         </View>
+        {/* Accommodation type */}
         <View style={styles.accommodationContainer}>
           <CustomText>{accommodationType}</CustomText>
         </View>
+        {/* Transport details and dates */}
         <View style={styles.transportsContainer}>
           <CustomText>
-            {leaveDate}-{returnDate}
+            {leaveDate} - {returnDate}
           </CustomText>
           <CustomText>
-            {leaveTransportType}-{returnTransportType}
+            {leaveTransportType} - {returnTransportType}
           </CustomText>
-          {/* <CustomText>{price}€</CustomText> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
   container: {
     width: "90%",
     height: 200,
-    //  borderWidth: 5,
     justifyContent: "space-between",
     alignItems: "center",
     margin: 10,
@@ -97,27 +96,20 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // Adjust the alpha channel for the desired transparency
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
-  nunitoText: {
-    fontFamily: "NunitoSans_400Regular",
-  },
   cityTitle: {
     fontSize: 24,
-    // backgroundColor: 'red',
     position: "absolute",
     zIndex: 1,
-    color: "black",
   },
   cityImgContainer: {
     width: "100%",
     height: "50%",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
-    // backgroundColor: 'green',
   },
   bookmark: {
     position: "absolute",
@@ -129,8 +121,6 @@ const styles = StyleSheet.create({
   cityImg: {
     width: "100%",
     height: "100%",
-    //resizeMode: 'contain',
-    //resizeMode: 'stretch',
     resizeMode: "cover",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -144,23 +134,17 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   activitiesContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
-    alignItems: "left",
+    alignItems: "flex-start",
   },
   text: {
     fontSize: 12,
   },
   accommodationContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
     alignItems: "center",
   },
   transportsContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
     alignItems: "center",
   },
