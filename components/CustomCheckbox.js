@@ -1,7 +1,7 @@
 import React from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { View } from "react-native";
 
+// CustomCheckbox component to display a styled checkbox with text
 const CustomCheckbox = ({ selectTransportationMode, text }) => {
   return (
     <BouncyCheckbox
